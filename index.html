@@ -24,25 +24,75 @@
       font-size: 3rem;
       margin-top: 0.5rem;
     }
+    .subtitle {
+      font-size: 1.2rem;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
     .names {
       font-size: 1.8rem;
-      margin: 1rem 0;
+      margin: 1rem 0 0.5rem;
+    }
+    .parents {
+      font-size: 1rem;
+      color: #7b3f3f;
+      margin-bottom: 2rem;
+    }
+    .circular-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 1.5rem auto;
+      border: 5px solid #f5c6cb;
+      box-shadow: 0 0 15px #f77ca0;
+      animation: fadeIn 2s ease;
+    }
+    .circular-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .details {
       font-size: 1.2rem;
-      margin: 1rem 0;
+      margin: 1.5rem 0;
       line-height: 1.8;
     }
-    .images {
-      margin: 2rem 0;
+    .carousel-container {
+      position: relative;
+      max-width: 600px;
+      margin: 2rem auto;
     }
-    .images img {
-      width: 90%;
-      max-width: 500px;
-      margin: 1rem 0;
-      border-radius: 15px;
+    .carousel-slide {
+      display: none;
+      border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      animation: fadeIn 2s ease forwards;
+      width: 100%;
+    }
+    .active-slide {
+      display: block;
+      animation: fade 1s;
+    }
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      width: auto;
+      padding: 10px;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 0 3px 3px 0;
+      user-select: none;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .next {
+      right: 0;
+      border-radius: 3px 0 0 3px;
+    }
+    @keyframes fade {
+      from { opacity: .4 }
+      to { opacity: 1 }
     }
     .blessings {
       margin: 2rem;
@@ -55,10 +105,6 @@
       font-size: 0.9rem;
       color: #888;
     }
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
   </style>
 </head>
 <body>
@@ -66,17 +112,21 @@
   <header>
     <img src="images/ganesha.png" alt="Ganesha">
     <h1>Two Souls One Journey</h1>
+    <div class="subtitle">(Destined to be together)</div>
   </header>
 
   <section class="names">
     <div>Sumit Kiran Gurav</div>
-    <div>&</div>
+    <div class="parents">(Son of Kiran Anandrao Gurav)</div>
     <div>Sukanya Prakash Tavale</div>
+    <div class="parents">(Daughter of Prakash Annappa Tavale)</div>
   </section>
 
+  <div class="circular-photo">
+    <img src="images/ghibli-circular.jpg" alt="Sumit and Sukanya">
+  </div>
+
   <section class="details">
-    <p>Son of Kiran Anandrao Gurav<br>
-    Daughter of Prakash Annappa Tavale</p>
     <p><strong>Wedding Date:</strong> 6th May 2025 | <strong>Time:</strong> 12:06 PM</p>
     <p><strong>Venue:</strong><br>
       <a href="https://maps.app.goo.gl/2MPM3bsWnnyxvs7s7" target="_blank">
@@ -85,15 +135,17 @@
     </p>
   </section>
 
-  <section class="images">
-    <img src="images/ghibli1.png" alt="Ghibli Couple 1">
-    <img src="images/ghibli2.png" alt="Ghibli Couple 2">
-    <img src="images/ghibli3.png" alt="Ghibli Couple 3">
-  </section>
+  <div class="carousel-container">
+    <img class="carousel-slide active-slide" src="images/ghibli1.jpg" alt="Ghibli Couple 1">
+    <img class="carousel-slide" src="images/ghibli2.jpg" alt="Ghibli Couple 2">
+    <img class="carousel-slide" src="images/ghibli3.jpg" alt="Ghibli Couple 3">
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  </div>
 
   <section class="blessings">
-    <p>\"विघ्न हरो श्री गणराया, मंगलमूर्ती मोरया!\"</p>
-    <p>\"ವಿಧ್ನಹರ ಗಣಪತಿ ಬಾಪ್ಪಾ, ನಿಮ್ಮ ಜೀವನದಲ್ಲಿ ಸದಾ ಸಂತೋಷವಿರಲಿ!\"</p>
+    <p>विघ्न हरो श्री गणराया, मंगलमूर्ती मोरया!</p>
+    <p>ವಿಧ್ನಹರ ಗಣಪತಿ ಬಾಪ್ಪಾ, ನಿಮ್ಮ ಜೀವನದಲ್ಲಿ ಸದಾ ಸಂತೋಷವಿರಲಿ!</p>
   </section>
 
   <footer>
@@ -109,6 +161,27 @@
       const audio = document.getElementById('bg-music');
       audio.play();
     }, { once: true });
+
+    let slideIndex = 0;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+
+    function showSlides(n) {
+      let slides = document.getElementsByClassName("carousel-slide");
+      if (n >= slides.length) {slideIndex = 0}
+      if (n < 0) {slideIndex = slides.length - 1}
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove("active-slide");
+      }
+      slides[slideIndex].classList.add("active-slide");
+    }
+
+    setInterval(() => {
+      plusSlides(1);
+    }, 4000); // Auto-slide every 4 seconds
   </script>
 
 </body>
